@@ -32,10 +32,20 @@ export default {
     onSubmit() {
       if (this.invalidInput) return;
       const { inputTitle, listId } = this;
-      this.ADD_CARD({ title: inputTitle, listId }).finally(() => {
+      const pos = this.newCardPos();
+      this.ADD_CARD({ title: inputTitle, listId, pos }).finally(() => {
         this.inputTitle = "";
         this.$emit("close");
       });
+    },
+    newCardPos() {
+      const curList = this.$store.state.board.lists.filter(
+        l => l.id === this.listId
+      )[0];
+      if (!curList) return 655535;
+      const { cards } = curList;
+      if (!cards.length) return 65535;
+      return cards[cards.length - 1].pos * 2;
     }
   }
 };
